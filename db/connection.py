@@ -7,7 +7,7 @@ class Connection:
         self._connection = None
 
         try:
-            self._connection = sqlite3.connect(self.db_name,check_same_thread=False)
+            self._connection = sqlite3.connect(self.db_name,check_same_thread=False,autocommit=True)
             self._connection.row_factory=sqlite3.Row
             self._cursor = self._connection.cursor()
 
@@ -23,7 +23,9 @@ class Connection:
             return
         try: 
             if not params:
+                self._cursor.com
                 return self._cursor.execute(query)
+            
             return self._cursor.execute(query,params)
         except sqlite3.Error as e:
             print(f"Erro ao realizar query no banco de dados: {e}")
@@ -33,7 +35,13 @@ class Connection:
             return self._cursor.fetchall()
         print("Nenhuma consulta foi realizada")
         return []
-            
+    
+    def fetch_one(self):
+        if self._cursor:
+            return self._cursor.fetchone()
+        print("Nenhuma consulta foi realizada")
+        return []     
+
     def __del__(self):
         if self._connection:
             print("Encerrando conexão com o banco de dados")

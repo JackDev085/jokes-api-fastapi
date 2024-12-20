@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jokes API Frontend</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        #controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+        }
+        .jokes-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .joke {
+            background-color: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .error {
+            color: red;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Jokes API</h1>
+    <h2>Frontend</h2>
+    <div id="controls">
+        <input type="text" id="categoryInput" placeholder="Search by category...">
+        <button onclick="fetchByCategory()">Search</button>
+        <button onclick="fetchAll()">Show All</button>
+    </div>
+    <div class="jokes-container" id="jokesContainer">
+        <!-- Jokes will appear here -->
+    </div>
+
+    <script>
+        const apiBaseUrl = "http://127.0.0.1:8000/api/jokes";
+
+        // Fetch all jokes
+        function fetchAll() {
+            fetch(`${apiBaseUrl}/`)
+                .then(response => response.json())
+                .then(data => {
+                    displayJokes(data.jokes);
+                })
+                .catch(err => {
+                    displayError("Failed to fetch jokes. Please try again.");
+                });
+        }
+
+        // Fetch jokes by category
+        function fetchByCategory() {
+            const category = document.getElementById("categoryInput").value;
+            if (!category) {
+                displayError("Please enter a category to search.");
+                return;
+            }
+
+            fetch(`${apiBaseUrl}/c/category/?category=${encodeURIComponent(category)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        displayError(data.error);
+                    } else {
+                        const jokes = Object.values(data)[0];
+                        displayJokes(jokes);
+                    }
+                })
+                .catch(err => {
+                    displayError("Failed to fetch jokes by category. Please try again.");
+                });
+        }
+
+        // Display jokes
+        function displayJokes(jokes) {
+            const container = document.getElementById("jokesContainer");
+            container.innerHTML = ""; // Clear existing jokes
+            if (jokes.length === 0) {
+                container.innerHTML = "<p class='error'>No jokes found.</p>";
+                return;
+            }
+            jokes.forEach(joke => {
+                const jokeDiv = document.createElement("div");
+                jokeDiv.className = "joke";
+                jokeDiv.innerHTML = `
+                    <p><strong>Question:</strong> ${joke.ask}</p>
+                    <p><strong>Response:</strong> ${joke.response}</p>
+                `;
+                container.appendChild(jokeDiv);
+            });
+        }
+
+        // Display error
+        function displayError(message) {
+            const container = document.getElementById("jokesContainer");
+            container.innerHTML = `<p class="error">${message}</p>`;
+        }
+    </script>
+</body>
+</html>
