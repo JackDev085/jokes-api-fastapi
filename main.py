@@ -3,6 +3,7 @@ from fastapi import FastAPI, Query, HTTPException
 from db.connection import Connection
 from repository.JokesRepository import JokesRepository
 from models.Joke import Joke
+from random import randint
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -21,6 +22,18 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/")
+def all_jokes():
+    all_jokes = jokes_repository.fetch_all()
+    return {"aleatory joke": all_jokes[randint(0, len(all_jokes))-1],
+            "routes":[
+                {1:"api/jokes/ - all jokes"},
+                {2:"api/jokes/{id} - one joke by id"},
+                {3:"api/jokes/c/category?category={category} - jokes by category"}
+            ]
+        }
+
 
 
 # Rota para buscar uma piada pelo ID
@@ -70,7 +83,9 @@ def update_one(joke: Joke):
         raise HTTPException(status_code=500, detail="Error during create joke")
     return {"created_joke": created_joke}
 
-
+if __name__ == '__main__':
+    import uvicorn
+    uvicorn.run(app, port=8080, host='0.0.0.0')
 """@app.delete("/api/jokes/{id}")
 def delete_one(id:int):
     deleted = jokes_repository.fetch_one(id)
