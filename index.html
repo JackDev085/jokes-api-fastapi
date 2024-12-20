@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,23 +11,30 @@
             margin: 20px;
             background-color: #f4f4f9;
         }
-        h1, h2 {
+
+        h1,
+        h2 {
             text-align: center;
         }
+
         #controls {
             display: flex;
             justify-content: center;
             gap: 10px;
             margin-bottom: 20px;
         }
-        input, button {
+
+        input,
+        button {
             padding: 10px;
             font-size: 16px;
         }
+
         .jokes-container {
             max-width: 800px;
             margin: 0 auto;
         }
+
         .joke {
             background-color: white;
             padding: 15px;
@@ -34,12 +42,14 @@
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+
         .error {
             color: red;
             text-align: center;
         }
     </style>
 </head>
+
 <body>
     <h1>Jokes API</h1>
     <h2>Frontend</h2>
@@ -102,8 +112,10 @@
                 const jokeDiv = document.createElement("div");
                 jokeDiv.className = "joke";
                 jokeDiv.innerHTML = `
+                    <p><strong>#</strong>${joke.id}</p>
                     <p><strong>Question:</strong> ${joke.ask}</p>
                     <p><strong>Response:</strong> ${joke.response}</p>
+                    <p><strong>category:</strong> ${joke.name}</p>
                 `;
                 container.appendChild(jokeDiv);
             });
@@ -116,4 +128,5 @@
         }
     </script>
 </body>
+
 </html>

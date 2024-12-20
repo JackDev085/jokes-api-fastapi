@@ -7,9 +7,8 @@ class JokesRepository:
 
     def fetch_all(self):
         try:
-            sql = """
-            select jokes.id, ask, response, name from jokes
-            inner join categories on jokes.category_id = categories.id
+            sql = """select jokes.id, ask, response, name from jokes
+            inner join categories on jokes.category_id = categories.id where jokes.id > 0
             """
             self._cursor.execute_query(sql)
             result = self._cursor.fetch_all()
@@ -28,9 +27,7 @@ class JokesRepository:
             self._cursor.execute_query(sql, (category,))
             result = self._cursor.fetch_all()
             if len(result) < 0:
-                print("vazio")
                 return None
-            print("Naovazio")
             
             return result
         except Exception as e:
@@ -68,6 +65,17 @@ class JokesRepository:
             """
             self._cursor.execute_query(sql, (joke.ask, joke.response, joke.category_id,id))
             return self._cursor.execute_query("select * from jokes where id=(?)",(id,)).fetchone()
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return None
+        
+    def create_one(self,joke:Joke):
+        try:
+            sql = """
+            insert into jokes(ask,response,category_id) values(?,?,?)
+            """
+            self._cursor.execute_query(sql,(joke.ask,joke.response,joke.category_id))
+            return self._cursor.execute_query("select * from jokes where id=(select max(id) from jokes)").fetchone()
         except Exception as e:
             print(f"An error occurred: {e}")
             return None

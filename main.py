@@ -63,6 +63,13 @@ def update_one(joke: Joke, id: int):
         raise HTTPException(status_code=404, detail="Joke not found")
     return {"updated_joke": updated_joke}
 
+@app.post("/api/jokes/create/")
+def update_one(joke: Joke):
+    created_joke = jokes_repository.create_one(joke)
+    if created_joke is None:
+        raise HTTPException(status_code=500, detail="Error during create joke")
+    return {"created_joke": created_joke}
+
 
 """@app.delete("/api/jokes/{id}")
 def delete_one(id:int):

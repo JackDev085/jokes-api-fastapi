@@ -23,7 +23,7 @@ class Connection:
             return
         try: 
             if not params:
-                self._cursor.com
+                self._cursor.execute(query)
                 return self._cursor.execute(query)
             
             return self._cursor.execute(query,params)
