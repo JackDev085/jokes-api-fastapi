@@ -10,11 +10,26 @@
             font-family: Arial, sans-serif;
             margin: 20px;
             background-color: #f4f4f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid red;
+            justify-content: center;
+            min-height: 96vh;
         }
 
         h1,
         h2 {
             text-align: center;
+        }
+
+        p {
+            font-weight: 300;
+        }
+
+        p,
+        strong {
+            font-weight: 500;
         }
 
         #controls {
@@ -52,81 +67,47 @@
 
 <body>
     <h1>Jokes API</h1>
-    <h2>Frontend</h2>
+
     <div id="controls">
-        <input type="text" id="categoryInput" placeholder="Search by category...">
-        <button onclick="fetchByCategory()">Search</button>
-        <button onclick="fetchAll()">Show All</button>
+        <button id="aleatory">Generate</button>
     </div>
+
     <div class="jokes-container" id="jokesContainer">
-        <!-- Jokes will appear here -->
     </div>
 
     <script>
-        const apiBaseUrl = "http://127.0.0.1:8000/api/jokes";
+        const jokesContainer = document.getElementById('jokesContainer');
+        const button = document.getElementById('aleatory');
 
-        // Fetch all jokes
-        function fetchAll() {
-            fetch(`${apiBaseUrl}/`)
-                .then(response => response.json())
-                .then(data => {
-                    displayJokes(data.jokes);
-                })
-                .catch(err => {
-                    displayError("Failed to fetch jokes. Please try again.");
-                });
-        }
+        button.addEventListener('click', e => {
+            e.preventDefault();
+            fetch_aleatory();
+        });
+        async function fetch_aleatory() {
+            console.log("fetching....");
+            await fetch("http://127.0.0.1:8000/").then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch jokes');
+                }
+                console.log("Request success");
+                return response.json();
 
-        // Fetch jokes by category
-        function fetchByCategory() {
-            const category = document.getElementById("categoryInput").value;
-            if (!category) {
-                displayError("Please enter a category to search.");
-                return;
-            }
-
-            fetch(`${apiBaseUrl}/c/category/?category=${encodeURIComponent(category)}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        displayError(data.error);
-                    } else {
-                        const jokes = Object.values(data)[0];
-                        displayJokes(jokes);
-                    }
-                })
-                .catch(err => {
-                    displayError("Failed to fetch jokes by category. Please try again.");
-                });
-        }
-
-        // Display jokes
-        function displayJokes(jokes) {
-            const container = document.getElementById("jokesContainer");
-            container.innerHTML = ""; // Clear existing jokes
-            if (jokes.length === 0) {
-                container.innerHTML = "<p class='error'>No jokes found.</p>";
-                return;
-            }
-            jokes.forEach(joke => {
-                const jokeDiv = document.createElement("div");
-                jokeDiv.className = "joke";
-                jokeDiv.innerHTML = `
-                    <p><strong>#</strong>${joke.id}</p>
-                    <p><strong>Question:</strong> ${joke.ask}</p>
-                    <p><strong>Response:</strong> ${joke.response}</p>
-                    <p><strong>category:</strong> ${joke.name}</p>
+            }).then(data => {
+                joke = data['aleatory_joke'];
+                jokesContainer.innerHTML =
+                    `
+                <div class="joke">
+                    <p>#${joke['id']}</p>
+                    <p><b>Pergunta: </b>${joke['ask']}</p>
+                    <p><b>Resposta: </b>${joke['response']}</p>
+                    <p><b>Categoria: </b>${joke['name']}</p>
+                </div>
                 `;
-                container.appendChild(jokeDiv);
+
             });
         }
-
-        // Display error
-        function displayError(message) {
-            const container = document.getElementById("jokesContainer");
-            container.innerHTML = `<p class="error">${message}</p>`;
-        }
     </script>
+
 </body>
 
 </html>

@@ -5,6 +5,7 @@ from repository.JokesRepository import JokesRepository
 from models.Joke import Joke
 from random import randint
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 
 
 # Conexão com o banco de dados e inicialização do repositório
@@ -22,11 +23,129 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+@app.get("/", response_class=HTMLResponse)
+def home():
+    html_content = """
+    <!DOCTYPE html>
+    <html lang="en">
 
-@app.get("/")
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Jokes API Frontend</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+                background-color: #f4f4f9;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 96vh;
+            }
+
+            h1,
+            h2 {
+                text-align: center;
+            }
+
+            p {
+                font-weight: 300;
+            }
+
+            p,
+            strong {
+                font-weight: 500;
+            }
+
+            #controls {
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+                margin-bottom: 20px;
+            }
+
+            input,
+            button {
+                padding: 10px;
+                font-size: 16px;
+            }
+
+            .jokes-container {
+                max-width: 800px;
+                margin: 0 auto;
+            }
+
+            .joke {
+                background-color: white;
+                padding: 15px;
+                margin: 10px 0;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            }
+
+            .error {
+                color: red;
+                text-align: center;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>Jokes API</h1>
+
+        <div id="controls">
+            <button id="aleatory">Generate</button>
+        </div>
+
+        <div class="jokes-container" id="jokesContainer">
+        </div>
+
+        <script>
+            const jokesContainer = document.getElementById('jokesContainer');
+            const button = document.getElementById('aleatory');
+
+            button.addEventListener('click', e => {
+                e.preventDefault();
+                fetch_aleatory();
+            });
+            async function fetch_aleatory() {
+                console.log("fetching....");
+                await fetch("http://127.0.0.1:8000/api/").then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch jokes');
+                    }
+                    console.log("Request success");
+                    return response.json();
+
+                }).then(data => {
+                    joke = data['aleatory_joke'];
+                    jokesContainer.innerHTML =
+                        `
+                    <div class="joke">
+                        <p>#${joke['id']}</p>
+                        <p><b>Pergunta: </b>${joke['ask']}</p>
+                        <p><b>Resposta: </b>${joke['response']}</p>
+                        <p><b>Categoria: </b>${joke['name']}</p>
+                    </div>
+                    `;
+
+                });
+            }
+        </script>
+
+    </body>
+
+    </html>
+    """
+    return HTMLResponse(content=html_content, status_code=200)
+
+
+@app.get("/api/")
 def all_jokes():
     all_jokes = jokes_repository.fetch_all()
-    return {"aleatory joke": all_jokes[randint(0, len(all_jokes))-1],
+    return {"aleatory_joke": all_jokes[randint(0, len(all_jokes))-1],
             "routes":[
                 {1:"api/jokes/ - all jokes"},
                 {2:"api/jokes/{id} - one joke by id"},
@@ -86,6 +205,7 @@ def update_one(joke: Joke):
 if __name__ == '__main__':
     import uvicorn
     uvicorn.run(app, port=8080, host='0.0.0.0')
+
 """@app.delete("/api/jokes/{id}")
 def delete_one(id:int):
     deleted = jokes_repository.fetch_one(id)
