@@ -8,7 +8,7 @@ class JokesRepository:
     def fetch_all(self):
         try:
             sql = """select jokes.id, ask, response, name from jokes
-            inner join categories on jokes.category_id = categories.id where jokes.id > 0
+            inner join categories on jokes.category_id = categories.id
             """
             self._cursor.execute_query(sql)
             result = self._cursor.fetch_all()
@@ -74,7 +74,7 @@ class JokesRepository:
             sql = """
             insert into jokes(ask,response,category_id) values(?,?,?)
             """
-            self._cursor.execute_query(sql,(joke.ask,joke.response,joke.category_id))
+            self._cursor.execute_query(sql,(joke.ask,joke.response,joke.category_id,))
             return self._cursor.execute_query("select * from jokes where id=(select max(id) from jokes)").fetchone()
         except Exception as e:
             print(f"An error occurred: {e}")
