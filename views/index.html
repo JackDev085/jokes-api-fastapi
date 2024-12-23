@@ -141,7 +141,7 @@
 
     async function fetch_aleatory() {
       console.log("fetching....");
-      await fetch(`http://127.0.0.1:8000/api/`).then(response => {
+      await fetch(`https://badjokesapi.vercel.app/api/`).then(response => {
 
         //await fetch("https://badjokesapi.vercel.app/api/").then(response => {
         if (!response.ok) {
@@ -170,8 +170,8 @@
       console.log(category);
       if (category !== undefined && category !== null && category !== "") {
         console.log("fetching....");
-        await fetch(`http://127.0.0.1:8000/api/jokes/c/category?category=${category}`).then(response => {
-          //await fetch(`https://badjokesapi.vercel.app/api/jokes/c/category?category=${category}`).then(response => {
+        //await fetch(`http://127.0.0.1:8000/api/jokes/c/category?category=${category}`).then(response => {
+        await fetch(`https://badjokesapi.vercel.app/api/jokes/c/category?category=${category}`).then(response => {
           if (!response.ok) {
             throw new Error('Failed to fetch jokes');
           }
@@ -208,8 +208,8 @@
     }
     async function fetch_all() {
       console.log("fetching....");
-      await fetch("http://127.0.0.1:8000/api/jokes").then(response => {
-        //await fetch("https://badjokesapi.vercel.app/api/jokes/").then(response => {
+      //await fetch("http://127.0.0.1:8000/api/jokes").then(response => {
+      await fetch("https://badjokesapi.vercel.app/api/jokes/").then(response => {
         if (!response.ok) {
           throw new Error('Failed to fetch jokes');
         }
