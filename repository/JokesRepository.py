@@ -7,11 +7,13 @@ class JokesRepository:
 
     def fetch_all(self):
         try:
-            sql = """select jokes.id, ask, response, name from jokes
-            inner join categories on jokes.category_id = categories.id
+            sql = """SELECT jokes.id, jokes.ask, jokes.response, categories.category_name
+            FROM jokes 
+            INNER JOIN categories ON jokes.category_id = categories.id;
             """
             self._cursor.execute_query(sql)
             result = self._cursor.fetch_all()
+            print(result)
             return result
         except Exception as e:
             print(f"An error occurred: {e}")
@@ -20,9 +22,9 @@ class JokesRepository:
     def fetch_all_by_category(self, category:str):
         try:
             sql = """
-            select jokes.id, ask, response, name from jokes
-            inner join categories on jokes.category_id = categories.id
-            where name = (?)
+            select jokes.id, ask, response, category_name from jokes
+            inner join categories on jokes.id = categories.id
+            where category_name = (?)
             """
             self._cursor.execute_query(sql, (category,))
             result = self._cursor.fetch_all()
@@ -37,8 +39,8 @@ class JokesRepository:
     def fetch_one(self, id: int):
         try:
             sql = """
-            select jokes.id, ask, response, name from jokes
-            inner join categories on jokes.category_id = categories.id 
+            select jokes.id, ask, response, category_name from jokes
+            inner join categories on jokes.id = categories.id 
             where jokes.id = ?
             """
             self._cursor.execute_query(sql, (id,))
@@ -61,9 +63,9 @@ class JokesRepository:
     def update_one(self, joke:Joke,id:int):
         try:
             sql = """
-            update jokes set ask = (?), response = (?), category_id = (?) where id = (?)
+            update jokes set ask = (?), response = (?), category_name = (?) where id = (?)
             """
-            self._cursor.execute_query(sql, (joke.ask, joke.response, joke.category_id,id))
+            self._cursor.execute_query(sql, (joke.ask, joke.response, joke.category_name,id))
             return self._cursor.execute_query("select * from jokes where id=(?)",(id,)).fetchone()
         except Exception as e:
             print(f"An error occurred: {e}")
@@ -72,9 +74,9 @@ class JokesRepository:
     def create_one(self,joke:Joke):
         try:
             sql = """
-            insert into jokes(ask,response,category_id) values(?,?,?)
+            insert into jokes(ask,response,category_name) values(?,?,?)
             """
-            self._cursor.execute_query(sql,(joke.ask,joke.response,joke.category_id,))
+            self._cursor.execute_query(sql,(joke.ask,joke.response,joke.category_name,))
             return self._cursor.execute_query("select * from jokes where id=(select max(id) from jokes)").fetchone()
         except Exception as e:
             print(f"An error occurred: {e}")

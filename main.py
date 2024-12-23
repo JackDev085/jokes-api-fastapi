@@ -60,7 +60,6 @@ def create_joke():
 @app.get("/api/jokes/")
 def all_jokes():
     all_jokes = jokes_repository.fetch_all()
-    print(all_jokes)
     return {"jokes": all_jokes}
 
 # Rota para buscar piadas por categoria

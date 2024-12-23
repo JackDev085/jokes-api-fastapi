@@ -142,9 +142,7 @@ home_content = """
 
     async function fetch_aleatory() {
       console.log("fetching....");
-      await fetch(`https://badjokesapi.vercel.app/api/`).then(response => {
-
-        //await fetch("https://badjokesapi.vercel.app/api/").then(response => {
+      await fetch(`api/`).then(response => {
         if (!response.ok) {
           throw new Error('Failed to fetch jokes');
         }
@@ -159,7 +157,7 @@ home_content = """
                         <p>#${joke['id']}</p>
                         <p><b>Pergunta: </b>${joke['ask']}</p>
                         <p><b>Resposta: </b>${joke['response']}</p>
-                        <p><b>Categoria: </b>${joke['name']}</p>
+                        <p><b>Categoria: </b>${joke['category_name']}</p>
                     </div>
                     `;
 
@@ -172,7 +170,7 @@ home_content = """
       if (category !== undefined && category !== null && category !== "") {
         console.log("fetching....");
         //await fetch(`http://127.0.0.1:8000/api/jokes/c/category?category=${category}`).then(response => {
-        await fetch(`https://badjokesapi.vercel.app/api/jokes/c/category?category=${category}`).then(response => {
+        await fetch(`api/jokes/c/category?category=${category}`).then(response => {
           if (!response.ok) {
             throw new Error('Failed to fetch jokes');
           }
@@ -193,7 +191,7 @@ home_content = """
                         <p>#${joke['id']}</p>
                         <p><b>Pergunta: </b>${joke['ask']}</p>
                         <p><b>Resposta: </b>${joke['response']}</p>
-                        <p><b>Categoria: </b>${joke['name']}</p>
+                        <p><b>Categoria: </b>${joke['category_name']}</p>
                     </div>
                     `;
           });
@@ -210,7 +208,7 @@ home_content = """
     async function fetch_all() {
       console.log("fetching....");
       //await fetch("http://127.0.0.1:8000/api/jokes").then(response => {
-      await fetch("https://badjokesapi.vercel.app/api/jokes/").then(response => {
+      await fetch("api/jokes/").then(response => {
         if (!response.ok) {
           throw new Error('Failed to fetch jokes');
         }
@@ -227,7 +225,7 @@ home_content = """
                   <p>#${joke['id']}</p>
                   <p><b>Pergunta: </b>${joke['ask']}</p>
                   <p><b>Resposta: </b>${joke['response']}</p>
-                  <p><b>Categoria: </b>${joke['name']}</p>
+                  <p><b>Categoria: </b>${joke['category_name']}</p>
               </div>
             `;
         });
