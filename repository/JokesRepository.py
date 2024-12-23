@@ -1,5 +1,6 @@
 from db.connection import Connection
 from models.Joke import Joke
+from random import randint
 
 class JokesRepository:
     def __init__(self, cursor: Connection):
@@ -7,7 +8,8 @@ class JokesRepository:
 
     def fetch_all(self):
         try:
-            sql = """SELECT jokes.id, jokes.ask, jokes.response, categories.category_name
+            sql = """
+            SELECT jokes.id, jokes.ask, jokes.response, category_name
             FROM jokes 
             INNER JOIN categories ON jokes.category_id = categories.id;
             """
@@ -22,15 +24,14 @@ class JokesRepository:
     def fetch_all_by_category(self, category:str):
         try:
             sql = """
-            select jokes.id, ask, response, category_name from jokes
-            inner join categories on jokes.id = categories.id
+            SELECT jokes.id, jokes.ask, jokes.response, category_name FROM jokes
+            INNER JOIN categories ON jokes.category_id = categories.id
             where category_name = (?)
             """
             self._cursor.execute_query(sql, (category,))
             result = self._cursor.fetch_all()
             if len(result) < 0:
                 return None
-            
             return result
         except Exception as e:
             print(f"An error occurred: {e}")
@@ -40,7 +41,7 @@ class JokesRepository:
         try:
             sql = """
             select jokes.id, ask, response, category_name from jokes
-            inner join categories on jokes.id = categories.id 
+            INNER JOIN categories ON jokes.category_id = categories.id;
             where jokes.id = ?
             """
             self._cursor.execute_query(sql, (id,))
@@ -78,6 +79,17 @@ class JokesRepository:
             """
             self._cursor.execute_query(sql,(joke.ask,joke.response,joke.category_name,))
             return self._cursor.execute_query("select * from jokes where id=(select max(id) from jokes)").fetchone()
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return None
+    def count(self):
+        try:
+            sql = """
+            select * from jokes
+            """
+            self._cursor.execute_query(sql)
+
+            return len(self._cursor.fetch_all())
         except Exception as e:
             print(f"An error occurred: {e}")
             return None

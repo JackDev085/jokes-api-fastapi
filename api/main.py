@@ -6,14 +6,14 @@ from models.Joke import Joke
 from random import randint
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
-from views.home import home_content
-from views.create import create_content
-from views.update import update_content
+from views.html import create_content,home_content,update_content
 
 
 # Conexão com o banco de dados e inicialização do repositório
 cursor = Connection("db.sqlite3")
 jokes_repository = JokesRepository(cursor)
+
+count = jokes_repository.count()
 
 # Instância do FastAPI
 app = FastAPI()
@@ -33,15 +33,10 @@ def home():
 
 
 @app.get("/api/")
-def all_jokes():
+def aleatory_joke():
     all_jokes = jokes_repository.fetch_all()
-    return {"aleatory_joke": all_jokes[randint(0, len(all_jokes))-1],
-            "routes":[
-                {1:"api/jokes/ - all jokes"},
-                {2:"api/jokes/{id} - one joke by id"},
-                {3:"api/jokes/c/category?category={category} - jokes by category"}
-            ]
-        }
+    return {"jokes": all_jokes[randint(0, len(all_jokes) - 1)]}
+    
 
 # Rota para buscar uma piada pelo ID
 @app.get("/api/jokes/{id}")

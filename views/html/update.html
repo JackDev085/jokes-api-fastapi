@@ -1,4 +1,3 @@
-update_content = """
 <!DOCTYPE html>
 <html>
 
@@ -63,7 +62,7 @@ update_content = """
 <body>
   <div class="create_joke">
     <h1>Update a Joke</h1>
-    <form action`=https://badjokesapi/api/jokes/update/` method="post" enctype="application/json">
+    <form action`=api/jokes/update/` method="post" enctype="application/json">
       <label for="id">ID</label>
       <input type="int" id="id" name="id" required>
       <label for="ask">Pergunta</label>
@@ -87,7 +86,7 @@ update_content = """
     const response = document.querySelector("#response").value;
     const category_id = document.querySelector("#category_id").value;
 
-    await fetch(`https://badjokesapi.vercel.app/api/jokes/${id}/`, {
+    await fetch(`api/jokes/${id}/`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -107,4 +106,3 @@ update_content = """
 </script>
 
 </html>
-"""

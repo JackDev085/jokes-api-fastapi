@@ -1,4 +1,3 @@
-home_content = """
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -83,7 +82,7 @@ home_content = """
     <h1>Jokes API</h1>
     <select name="type" id="select">
       <option value="aleatory">aleatório</option>
-      <option value="category">Cateogoria</option>
+      <option value="category">Categoria</option>
       <option value="all">Todas (limite - 10)</option>
     </select>
   </div>
@@ -117,7 +116,6 @@ home_content = """
       });
 
       function startRequest() {
-        console.log(select.value);
         if (select.value == "aleatory") {
           fetch_aleatory();
         } else if (select.value == "category") {
@@ -131,6 +129,7 @@ home_content = """
 
     select.addEventListener('change', e => {
       if (select.value == "category") {
+        
         controls.innerHTML = "<input type='text' id='category' placeholder='Digite a categoria'>" + controls.innerHTML;
       } else {
         controls.innerHTML = "<button id='get'>Generate</button>";
@@ -141,7 +140,6 @@ home_content = """
 
 
     async function fetch_aleatory() {
-      console.log("fetching....");
       await fetch(`api/`).then(response => {
         if (!response.ok) {
           throw new Error('Failed to fetch jokes');
@@ -163,10 +161,10 @@ home_content = """
 
       });
     }
+  
 
     async function fetch_category() {
       const category = document.getElementById('category').value;
-      console.log(category);
       if (category !== undefined && category !== null && category !== "") {
         console.log("fetching....");
         //await fetch(`http://127.0.0.1:8000/api/jokes/c/category?category=${category}`).then(response => {
@@ -206,7 +204,6 @@ home_content = """
 
     }
     async function fetch_all() {
-      console.log("fetching....");
       //await fetch("http://127.0.0.1:8000/api/jokes").then(response => {
       await fetch("api/jokes/").then(response => {
         if (!response.ok) {
@@ -237,4 +234,3 @@ home_content = """
 </body>
 
 </html>
-"""

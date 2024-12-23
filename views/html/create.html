@@ -1,4 +1,3 @@
-create_content = """
 <!DOCTYPE html>
 <html>
 
@@ -63,7 +62,7 @@ create_content = """
 <body>
   <div class="create_joke">
     <h1>Create a Joke</h1>
-    <form action="https://badjokesapi/api/jokes/create/" method="post" enctype="application/json">
+    <form action="api/jokes/create/" method="post" enctype="application/json">
       <label for="ask">Pergunta</label>
       <input type="text" id="ask" name="ask" required>
       <label for="response">Resposta</label>
@@ -84,7 +83,7 @@ create_content = """
     const response = document.querySelector("#response").value;
     const category_id = document.querySelector("#category_id").value;
 
-    await fetch("https://badjokesapi/api/jokes/create/", {
+    await fetch("api/jokes/create/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -102,6 +101,3 @@ create_content = """
   });
 
 </script>
-
-</html>
-"""
