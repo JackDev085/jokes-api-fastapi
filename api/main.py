@@ -34,8 +34,8 @@ def home():
 
 @app.get("/api/")
 def aleatory_joke():
-    all_jokes = jokes_repository.fetch_all()
-    return {"jokes": all_jokes[randint(0, len(all_jokes) - 1)]}
+    all_jokes = jokes_repository.fetch_aleatory()
+    return {"aleatory_joke": all_jokes[0]}
     
 
 # Rota para buscar uma piada pelo ID

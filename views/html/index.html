@@ -129,7 +129,6 @@
 
     select.addEventListener('change', e => {
       if (select.value == "category") {
-        
         controls.innerHTML = "<input type='text' id='category' placeholder='Digite a categoria'>" + controls.innerHTML;
       } else {
         controls.innerHTML = "<button id='get'>Generate</button>";
@@ -149,6 +148,7 @@
 
       }).then(data => {
         joke = data['aleatory_joke'];
+        console.log(joke);
         jokesContainer.innerHTML =
           `
                     <div class="joke">
@@ -161,7 +161,7 @@
 
       });
     }
-  
+
 
     async function fetch_category() {
       const category = document.getElementById('category').value;

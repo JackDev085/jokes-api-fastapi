@@ -14,9 +14,36 @@ class JokesRepository:
             INNER JOIN categories ON jokes.category_id = categories.id;
             """
             self._cursor.execute_query(sql)
-            result = self._cursor.fetch_all()
-            print(result)
-            return result
+            return self._cursor.fetch_all()
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return None
+        
+    def fetch_aleatory(self,) ->list:
+        count_number = self.count_jokes()
+        aleatory = randint(1,count_number[0])
+        print(aleatory)
+        try:
+            sql = """
+            SELECT jokes.id, jokes.ask, jokes.response, category_name
+            FROM jokes 
+            INNER JOIN categories ON jokes.category_id = categories.id
+            WHERE jokes.id = (?)
+            """
+            self._cursor.execute_query(sql,(aleatory,))
+            return self._cursor.fetch_all()
+        except Exception as e:
+            print(f"An error occurred fetch_aleatory: {e}")
+            return None
+
+        
+    def count_jokes(self):
+        try:
+            sql = """
+            select count(*) from jokes
+            """
+            self._cursor.execute_query(sql)
+            return self._cursor.fetch_one()
         except Exception as e:
             print(f"An error occurred: {e}")
             return None
