@@ -15,7 +15,6 @@ class JokesRepository:
             """
             self._cursor.execute_query(sql)
             result = self._cursor.fetch_all()
-            print(result)
             return result
         except Exception as e:
             print(f"An error occurred: {e}")
@@ -79,17 +78,6 @@ class JokesRepository:
             """
             self._cursor.execute_query(sql,(joke.ask,joke.response,joke.category_name,))
             return self._cursor.execute_query("select * from jokes where id=(select max(id) from jokes)").fetchone()
-        except Exception as e:
-            print(f"An error occurred: {e}")
-            return None
-    def count(self):
-        try:
-            sql = """
-            select * from jokes
-            """
-            self._cursor.execute_query(sql)
-
-            return len(self._cursor.fetch_all())
         except Exception as e:
             print(f"An error occurred: {e}")
             return None

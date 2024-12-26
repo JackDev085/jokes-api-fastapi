@@ -148,14 +148,15 @@
         return response.json();
 
       }).then(data => {
+        console.log(data);
         joke = data['aleatory_joke'];
         jokesContainer.innerHTML =
-          `
+                     ` 
                     <div class="joke">
-                        <p>#${joke['id']}</p>
-                        <p><b>Pergunta: </b>${joke['ask']}</p>
-                        <p><b>Resposta: </b>${joke['response']}</p>
-                        <p><b>Categoria: </b>${joke['category_name']}</p>
+                        <p>#${joke.id}</p>
+                        <p><b>Pergunta: </b>${joke.ask}</p>
+                        <p><b>Resposta: </b>${joke.response}</p>
+                        <p><b>Categoria: </b>${joke.category_name}</p>
                     </div>
                     `;
 

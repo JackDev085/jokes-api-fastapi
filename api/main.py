@@ -13,7 +13,6 @@ from views.html import create_content,home_content,update_content
 cursor = Connection("db.sqlite3")
 jokes_repository = JokesRepository(cursor)
 
-count = jokes_repository.count()
 
 # Instância do FastAPI
 app = FastAPI()
@@ -35,7 +34,7 @@ def home():
 @app.get("/api/")
 def aleatory_joke():
     all_jokes = jokes_repository.fetch_all()
-    return {"jokes": all_jokes[randint(0, len(all_jokes) - 1)]}
+    return {"aleatory_joke": all_jokes[randint(0, len(all_jokes) - 1)]}
     
 
 # Rota para buscar uma piada pelo ID
@@ -55,7 +54,6 @@ def create_joke():
 @app.get("/api/jokes/")
 def all_jokes():
     all_jokes = jokes_repository.fetch_all()
-    print(all_jokes)
     return {"jokes": all_jokes}
 
 # Rota para buscar piadas por categoria
